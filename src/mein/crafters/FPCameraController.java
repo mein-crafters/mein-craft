@@ -51,15 +51,15 @@ public class FPCameraController
    }
    public void strafeLeft(float distance)
    {
-      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw - 90));
-      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw - 90));
+      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw + 90));
+      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw + 90));
       position.x += xOffset;
       position.z -= zOffset;
    }
    public void strafeRight(float distance)
    {
-      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw + 90));
-      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw + 90));
+      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw - 90));
+      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw - 90));
       position.x += xOffset;
       position.z -= zOffset;      
    }
@@ -99,19 +99,19 @@ public class FPCameraController
          camera.yaw(dx*mouseSensitivity);
          camera.pitch(dy*mouseSensitivity);
          
-         if(Keyboard.isKeyDown(Keyboard.KEY_W))
+         if(Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP))
          {
             camera.walkForward(movementSpeed);
          }
-         if(Keyboard.isKeyDown(Keyboard.KEY_A))
+         if(Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT))
          {
             camera.strafeLeft(movementSpeed);
          }         
-         if(Keyboard.isKeyDown(Keyboard.KEY_S))          
+         if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN))          
          {
             camera.walkBackwards(movementSpeed);
          }      
-         if(Keyboard.isKeyDown(Keyboard.KEY_D))
+         if(Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
          {
             camera.strafeRight(movementSpeed);
          }
