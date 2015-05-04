@@ -48,8 +48,7 @@ class Basic3D {
 
     private void createWindow() throws Exception {
         Display.setFullscreen(false);
-        DisplayMode d[]
-                = Display.getAvailableDisplayModes();
+        DisplayMode d[] = Display.getAvailableDisplayModes();
         for (int i = 0; i < d.length; i++) {
             if (d[i].getWidth() == 640
                     && d[i].getHeight() == 480

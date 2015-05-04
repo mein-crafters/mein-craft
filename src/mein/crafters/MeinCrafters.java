@@ -17,26 +17,4 @@ public class MeinCrafters {
         basic.start();
     }
 
-    private void render() {
-        try {
-            glBegin(GL_QUADS);
-            //Top
-            glColor3f(1.0f, 0.0f, 1.0f);
-            glVertex3f(1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(1.0f, 1.0f, -1.0f);
-            //Bottom
-            glColor3f(0.0f, 1.0f, 1.0f);
-            glVertex3f(1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(1.0f, 1.0f, -1.0f);
-            glEnd();
-            //
-        } catch (Exception e) {
-
-        }
-    }
-
 }
