@@ -26,6 +26,7 @@ public class Chunks {
     private Random r;
 
     public void render() {
+//        glBegin(GL_QUADS);
         glPushMatrix();
         glPushMatrix();
         glBindBuffer(GL_ARRAY_BUFFER, VBOVertexHandle);
@@ -34,6 +35,7 @@ public class Chunks {
         glColorPointer(3, GL_FLOAT, 0, 0L);
         glDrawArrays(GL_QUADS, 0, CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 24);
         glPopMatrix();
+//        glEnd();
     }
 
     public void rebuildMesh(float startX, float startY, float startZ) {
@@ -152,4 +154,5 @@ public class Chunks {
         StartZ = startZ;
         rebuildMesh(startX, startY, startZ);
     }
+
 }
