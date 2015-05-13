@@ -10,6 +10,7 @@ import java.util.Random;
 import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
+import mein.crafters.SimplexNoise_octave;
 
 /**
  *
@@ -39,6 +40,14 @@ public class Chunks {
     }
 
     public void rebuildMesh(float startX, float startY, float startZ) {
+        //new stuff
+        //feeding simplex noise its largest feature, persistence and seed to start generating random numbers
+        SimplexNoise noise = new SimplexNoise(30, 30, 15);
+//      getting the random height of our world
+        
+        float height = (startY + (int)(100*noise.getNoise(1,1,1)) * CUBE_LENGTH);
+        //NOT SURE WHERE TO PUT THE HEIGHT but I belive its in the loop for y
+        
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers();
         FloatBuffer VertexPositionData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
@@ -47,7 +56,7 @@ public class Chunks {
             for (float z = 0; z < CHUNK_SIZE; z += 1) {
                 for (float y = 0; y < CHUNK_SIZE; y++) {
                     VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)), (float) (startZ + z * CUBE_LENGTH)));
-
+                    
                     VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
                 }
             }
