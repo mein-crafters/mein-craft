@@ -33,17 +33,19 @@ public class Chunks {
 
     public void render() {
 //        glBegin(GL_QUADS);
+        
         glPushMatrix();
         glPushMatrix();
-        glBindBuffer(GL_ARRAY_BUFFER, VBOVertexHandle);
-        glVertexPointer(3, GL_FLOAT, 0, 0L);
-        glBindBuffer(GL_ARRAY_BUFFER, VBOColorHandle);
-        glColorPointer(3, GL_FLOAT, 0, 0L);
         //must be before glDraw arrays
         glBindBuffer(GL_ARRAY_BUFFER, VBOTextureHandle);
         glBindTexture(GL_TEXTURE_2D, 1);
         glTexCoordPointer(2, GL_FLOAT, 0, 0L);
         //
+        glBindBuffer(GL_ARRAY_BUFFER, VBOVertexHandle);
+        glVertexPointer(3, GL_FLOAT, 0, 0L);
+        glBindBuffer(GL_ARRAY_BUFFER, VBOColorHandle);
+        glColorPointer(3, GL_FLOAT, 0, 0L);
+        
         glDrawArrays(GL_QUADS, 0, CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 24);
         glPopMatrix();
 //        glEnd();
@@ -58,21 +60,21 @@ public class Chunks {
 //        float height = (startY + (int)(100*noise.getNoise(1,1,1)) * CUBE_LENGTH);
         //This line is placed on the y loop below. Will gerneate a random terrain
         //VBO(Vertex Buffer Objects) handles
-        VBOTextureHandle = glGenBuffers();
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers();
+        VBOTextureHandle = glGenBuffers();
         //Float buffers 
-        FloatBuffer VertexTextureData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         FloatBuffer VertexPositionData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         FloatBuffer VertexColorData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
+        FloatBuffer VertexTextureData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         //render chuncks loop
         for (int x = 0; x < CHUNK_SIZE; x += 1) {
             for (int z = 0; z < CHUNK_SIZE; z += 1) {
                 for (int y = 0; y < (startY + (int) (100 * noise.getNoise(x, y, z)) * CUBE_LENGTH); y++) {
                     VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)), (float) (startZ + z * CUBE_LENGTH)));
+                    VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
                     VertexTextureData.put(createTexCube((float) 0, (float) 0, Blocks[(int) (x)][(int) (y)][(int) (z)]));
 
-                    VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
                 }
             }
         }
@@ -150,7 +152,7 @@ public class Chunks {
 //            case 3:
 //                return new float[]{0, 0f, 1f};
 //        }
-        return new float[]{1, 1, 1}; 
+        return new float[]{1, 1, 1};
     }
 
     //was originally chunck in slides but I think it was meant to be constructor so I renamed it 
@@ -158,9 +160,8 @@ public class Chunks {
         //try before anything else
         //gets a png of what we want the terrain to look like
         try {
-            System.out.println("The location we are looking for the picutre is: " + ResourceLoader.getResourceAsStream("terrain.png").toString());
+//            System.out.println("The location we are looking for the picutre is: " + ResourceLoader.getResourceAsStream("terrain.png").toString());
             texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("terrain.png"));
-            
         } catch (Exception e) {
             System.out.print("ER-ROAR!");
         }
@@ -177,7 +178,7 @@ public class Chunks {
                         Blocks[x][y][z] = new Block(
                                 Block.BlockType.BlockType_Dirt
                         );
-                    } else if (r.nextFloat() > 0.2f) { 
+                    } else if (r.nextFloat() > 0.2f) {
                         Blocks[x][y][z] = new Block(
                                 Block.BlockType.BlockType_Water
                         );

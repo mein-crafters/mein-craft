@@ -47,6 +47,8 @@ class Basic3D {
     private void initGL() {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glMatrixMode(GL_PROJECTION);
+        glEnable(GL_TEXTURE_2D);
+        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glLoadIdentity();
         GLU.gluPerspective(100.0f, (float) displayMode.getWidth() / (float) displayMode.getHeight(), 0.1f, 300.0f);
         glMatrixMode(GL_MODELVIEW);
@@ -54,8 +56,7 @@ class Basic3D {
         glEnableClientState(GL_COLOR_ARRAY);
         glEnable(GL_DEPTH_TEST);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        glEnable(GL_TEXTURE_2D);
-        glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+        
     }
 
     private void createWindow() throws Exception {
