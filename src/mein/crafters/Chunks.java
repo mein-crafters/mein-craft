@@ -42,19 +42,19 @@ public class Chunks {
     public void rebuildMesh(float startX, float startY, float startZ) {
         //new stuff
         //feeding simplex noise its largest feature, persistence and seed to start generating random numbers
-        SimplexNoise noise = new SimplexNoise(30, 30, 15);
+        SimplexNoise noise = new SimplexNoise(30, .1, 20);
 //      getting the random height of our world
         
-        float height = (startY + (int)(100*noise.getNoise(1,1,1)) * CUBE_LENGTH);
-        //NOT SURE WHERE TO PUT THE HEIGHT but I belive its in the loop for y
+//        float height = (startY + (int)(100*noise.getNoise(1,1,1)) * CUBE_LENGTH);
+        //This line is placed on the y loop below. Will gerneate a random terrain
         
         VBOColorHandle = glGenBuffers();
         VBOVertexHandle = glGenBuffers();
         FloatBuffer VertexPositionData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         FloatBuffer VertexColorData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
-        for (float x = 0; x < CHUNK_SIZE; x += 1) {
-            for (float z = 0; z < CHUNK_SIZE; z += 1) {
-                for (float y = 0; y < CHUNK_SIZE; y++) {
+        for (int x = 0; x < CHUNK_SIZE; x += 1) {
+            for (int z = 0; z < CHUNK_SIZE; z += 1) {
+                for (int y = 0; y < (startY + (int)(100*noise.getNoise(x,y,z)) * CUBE_LENGTH); y++) {
                     VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)), (float) (startZ + z * CUBE_LENGTH)));
                     
                     VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
