@@ -161,7 +161,7 @@ public class Chunks {
         //gets a png of what we want the terrain to look like
         try {
 //            System.out.println("The location we are looking for the picutre is: " + ResourceLoader.getResourceAsStream("terrain.png").toString());
-            texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("terrain.png"));
+            texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("terrain2.png"));
         } catch (Exception e) {
             System.out.print("ER-ROAR!");
         }
@@ -182,7 +182,20 @@ public class Chunks {
                         Blocks[x][y][z] = new Block(
                                 Block.BlockType.BlockType_Water
                         );
-                    } else {
+                    } else if (r.nextFloat() > 0.3f){
+                        Blocks[x][y][z] = new Block(
+                                Block.BlockType.BlockType_Sand
+                        );
+                    } else if(r.nextFloat() > 0.5f) {
+                        Blocks[x][y][z] = new Block(
+                                Block.BlockType.BlockType_Stone
+                        );
+                    } else if(r.nextFloat() > 0.6f){
+                        Blocks[x][y][z] = new Block(
+                                Block.BlockType.BlockType_Bedrock
+                        );
+                    }
+                    else { 
                         //There wasnt a default block name in block class so I made one
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Default);
                     }
@@ -207,12 +220,12 @@ public class Chunks {
             //Grass
             case 0:
                 return new float[]{
-                    // BOTTOM QUAD(DOWN=+Y)
+                    // TOP QUAD(DOWN=+Y)
                     x + offset * 3, y + offset * 10,
                     x + offset * 2, y + offset * 10,
                     x + offset * 2, y + offset * 9,
                     x + offset * 3, y + offset * 9,
-                    // TOP!
+                    // BOTTOM!
                     x + offset * 3, y + offset * 1,
                     x + offset * 2, y + offset * 1,
                     x + offset * 2, y + offset * 0,
@@ -251,25 +264,25 @@ public class Chunks {
                     x + offset * 2, y + offset * 1,
                     x + offset * 3, y + offset * 2,
                     // FRONT QUAD
-                    x + offset * 3, y + offset * 0,
-                    x + offset * 4, y + offset * 0,
-                    x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1,
+                    x + offset * 1, y + offset * 12,
+                    x + offset * 0, y + offset * 12,
+                    x + offset * 0, y + offset * 13,
+                    x + offset * 1, y + offset * 13,
                     // BACK QUAD
-                    x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1,
-                    x + offset * 3, y + offset * 0,
-                    x + offset * 4, y + offset * 0,
+                    x + offset * 1, y + offset * 12,
+                    x + offset * 0, y + offset * 12,
+                    x + offset * 0, y + offset * 13,
+                    x + offset * 1, y + offset * 13,
                     // LEFT QUAD
                     x + offset * 1, y + offset * 12,
                     x + offset * 0, y + offset * 12,
                     x + offset * 0, y + offset * 13,
                     x + offset * 1, y + offset * 13,
                     // RIGHT QUAD
-                    x + offset * 3, y + offset * 0,
-                    x + offset * 4, y + offset * 0,
-                    x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1};
+                    x + offset * 1, y + offset * 12,
+                    x + offset * 0, y + offset * 12,
+                    x + offset * 0, y + offset * 13,
+                    x + offset * 1, y + offset * 13};
                     //Water
                 case 2:
                 return new float[]{
@@ -369,39 +382,39 @@ public class Chunks {
                     x + offset * 4, y + offset * 0,
                     x + offset * 4, y + offset * 1,
                     x + offset * 3, y + offset * 1};
-                        //BedRock
+                        //Pumpkin
                         case 5:
                 return new float[]{
                     // BOTTOM QUAD(DOWN=+Y)
-                    x + offset * 3, y + offset * 10,
-                    x + offset * 2, y + offset * 10,
-                    x + offset * 2, y + offset * 9,
-                    x + offset * 3, y + offset * 9,
+                    x + offset * 7, y + offset * 7,
+                    x + offset * 6, y + offset * 7,
+                    x + offset * 6, y + offset * 6,
+                    x + offset * 7, y + offset * 6,
                     // TOP!
-                    x + offset * 3, y + offset * 1,
-                    x + offset * 2, y + offset * 1,
-                    x + offset * 2, y + offset * 0,
-                    x + offset * 3, y + offset * 0,
+                    x + offset * 7, y + offset * 8,
+                    x + offset * 6, y + offset * 8,
+                    x + offset * 6, y + offset * 7,
+                    x + offset * 7, y + offset * 7,
                     // FRONT QUAD
-                    x + offset * 3, y + offset * 0,
-                    x + offset * 4, y + offset * 0,
-                    x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1,
+                    x + offset * 9, y + offset * 7,
+                    x + offset * 8, y + offset * 7,
+                    x + offset * 8, y + offset * 8,
+                    x + offset * 9, y + offset * 8,
                     // BACK QUAD
-                    x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1,
-                    x + offset * 3, y + offset * 0,
-                    x + offset * 4, y + offset * 0,
+                    x + offset * 7, y + offset * 8,
+                    x + offset * 6, y + offset * 8,
+                    x + offset * 6, y + offset * 7,
+                    x + offset * 7, y + offset * 7,
                     // LEFT QUAD
-                    x + offset * 3, y + offset * 0,
-                    x + offset * 4, y + offset * 0,
-                    x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1,
+                    x + offset * 7, y + offset * 7,
+                    x + offset * 6, y + offset * 7,
+                    x + offset * 6, y + offset * 8,
+                    x + offset * 7, y + offset * 8,
                     // RIGHT QUAD
-                    x + offset * 3, y + offset * 0,
-                    x + offset * 4, y + offset * 0,
-                    x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1};
+                    x + offset * 7, y + offset * 7,
+                    x + offset * 6, y + offset * 7,
+                    x + offset * 6, y + offset * 8,
+                    x + offset * 7, y + offset * 8,};
                         //Default - bedrock
                         case 6:
                 return new float[]{
