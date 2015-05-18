@@ -30,13 +30,14 @@ import org.lwjgl.util.glu.GLU;
  */
 class Basic3D {
 
-    private FPCameraController fp = new FPCameraController(0f, 0f, 0f);
+    private FPCameraController fp;
     private DisplayMode displayMode;
 
     public void start() {
         try {
             createWindow();
             initGL();
+            fp = new FPCameraController(0f, 0f, 0f);
             fp.gameLoop();//render();
         } catch (Exception e) {
             e.printStackTrace();
