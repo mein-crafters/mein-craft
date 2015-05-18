@@ -54,7 +54,7 @@ public class Chunks {
     public void rebuildMesh(float startX, float startY, float startZ) {
         //new stuff
         //feeding simplex noise its largest feature, persistence and seed to start generating random numbers
-        SimplexNoise noise = new SimplexNoise(60, .13, 30);
+        SimplexNoise noise = new SimplexNoise(60, .05, 25);
 //      getting the random height of our world
 
 //        float height = (startY + (int)(100*noise.getNoise(1,1,1)) * CUBE_LENGTH);
@@ -68,12 +68,19 @@ public class Chunks {
         FloatBuffer VertexColorData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         FloatBuffer VertexTextureData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         //render chuncks loop
+        double height; 
         for (int x = 0; x < CHUNK_SIZE; x += 1) {
             for (int z = 0; z < CHUNK_SIZE; z += 1) {
-                for (int y = 0; y < (startY + (int) (100 * noise.getNoise(x, y, z)) * CUBE_LENGTH); y++) {
-                    VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) (y * CUBE_LENGTH + (int) (CHUNK_SIZE * .8)), (float) (startZ + z * CUBE_LENGTH)));
+                height = (startY + (int) (100 * noise.getNoise(x, z)) * CUBE_LENGTH);
+                for (int y = 0; y < CHUNK_SIZE; y++) {
+                    //A special, magical height for...stuff
+                    int specialHeight = y * CUBE_LENGTH + (int) height;
+                    if(specialHeight > 20){
+                        VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) specialHeight, (float) (startZ + z * CUBE_LENGTH)));
                     VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
                     VertexTextureData.put(createTexCube((float) 0, (float) 0, Blocks[(int) (x)][(int) (y)][(int) (z)]));
+                    }
+                    
                 }
             }
         }
