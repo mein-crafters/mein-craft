@@ -1,7 +1,7 @@
 /***************************************************************
 *  Team members: Michael Ortiz, Daniel Lin, Peter Maxwell
 *  Team Name: Mein-crafters
-*  file: Basic3D.java
+*  file: SimplexNoise_octave.java
 *  author: T. Diaz
 *  class: CS 445 – Computer Graphics
 *
