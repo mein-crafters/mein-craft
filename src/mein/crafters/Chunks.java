@@ -1,8 +1,17 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+/***************************************************************
+*  Team members: Michael Ortiz, Daniel Lin, Peter Maxwell
+*  Team Name: Mein-crafters
+*  file: Chunks.java
+*  author: T. Diaz
+*  class: CS 445 – Computer Graphics
+*
+*  Final Project: checkpoint 2
+*  date last modified: 5/18/2015
+*
+*  purpose: This program draws multiple cubes using a chunks method, with each cube
+*  textured and then randomly placed using simplex noise. There are 6 cube types defined:
+*  grass, sand, water, dirt, stone, and bedrock
+****************************************************************/ 
 package mein.crafters;
 
 import java.nio.FloatBuffer;
@@ -31,10 +40,8 @@ public class Chunks {
     private int VBOTextureHandle;
     private Texture texture;
 
-    public void render() {
-//        glBegin(GL_QUADS);
-        
-        glPushMatrix();
+    public void render() 
+    {
         glPushMatrix();
         //must be before glDraw arrays
         glBindBuffer(GL_ARRAY_BUFFER, VBOTextureHandle);
@@ -48,16 +55,15 @@ public class Chunks {
         
         glDrawArrays(GL_QUADS, 0, CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE * 24);
         glPopMatrix();
-//        glEnd();
     }
 
     public void rebuildMesh(float startX, float startY, float startZ) {
         //new stuff
         //feeding simplex noise its largest feature, persistence and seed to start generating random numbers
         SimplexNoise noise = new SimplexNoise(60, .05, 25);
-//      getting the random height of our world
+        //getting the random height of our world
 
-//        float height = (startY + (int)(100*noise.getNoise(1,1,1)) * CUBE_LENGTH);
+        //float height = (startY + (int)(100*noise.getNoise(1,1,1)) * CUBE_LENGTH);
         //This line is placed on the y loop below. Will gerneate a random terrain
         //VBO(Vertex Buffer Objects) handles
         VBOColorHandle = glGenBuffers();
@@ -69,16 +75,20 @@ public class Chunks {
         FloatBuffer VertexTextureData = BufferUtils.createFloatBuffer((CHUNK_SIZE * CHUNK_SIZE * CHUNK_SIZE) * 6 * 12);
         //render chuncks loop
         double height; 
-        for (int x = 0; x < CHUNK_SIZE; x += 1) {
-            for (int z = 0; z < CHUNK_SIZE; z += 1) {
+        for (int x = 0; x < CHUNK_SIZE; x += 1) 
+        {
+            for (int z = 0; z < CHUNK_SIZE; z += 1) 
+            {
                 height = (startY + (int) (100 * noise.getNoise(x, z)) * CUBE_LENGTH);
-                for (int y = 0; y < CHUNK_SIZE; y++) {
+                for (int y = 0; y < CHUNK_SIZE; y++) 
+                {
                     //A special, magical height for...stuff
                     int specialHeight = y * CUBE_LENGTH + (int) height;
-                    if(specialHeight > 20){
+                    if(specialHeight > 20)
+                    {
                         VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) specialHeight, (float) (startZ + z * CUBE_LENGTH)));
-                    VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
-                    VertexTextureData.put(createTexCube((float) 0, (float) 0, Blocks[(int) (x)][(int) (y)][(int) (z)]));
+                        VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
+                        VertexTextureData.put(createTexCube((float) 0, (float) 0, Blocks[(int) (x)][(int) (y)][(int) (z)]));
                     }
                     
                 }
@@ -105,9 +115,8 @@ public class Chunks {
 
     private float[] createCubeVertexCol(float[] CubeColorArray) {
         float[] cubeColors = new float[CubeColorArray.length * 4 * 6];
-        for (int i = 0;
-                i < cubeColors.length;
-                i++) {
+        for (int i = 0; i < cubeColors.length; i++) 
+        {
             cubeColors[i] = CubeColorArray[i % CubeColorArray.length];
         }
         return cubeColors;
@@ -166,43 +175,49 @@ public class Chunks {
     public Chunks(int startX, int startY, int startZ) {
         //try before anything else
         //gets a png of what we want the terrain to look like
-        try {
-//            System.out.println("The location we are looking for the picutre is: " + ResourceLoader.getResourceAsStream("terrain.png").toString());
+        try 
+        {
+            //System.out.println("The location we are looking for the picutre is: " + ResourceLoader.getResourceAsStream("terrain.png").toString());
             texture = TextureLoader.getTexture("PNG", ResourceLoader.getResourceAsStream("terrain2.png"));
-        } catch (Exception e) {
+        } 
+        catch (Exception e) 
+        {
             System.out.print("ER-ROAR!");
         }
         r = new Random();
         Blocks = new Block[CHUNK_SIZE][CHUNK_SIZE][CHUNK_SIZE];
-        for (int x = 0; x < CHUNK_SIZE; x++) {
-            for (int y = 0; y < CHUNK_SIZE; y++) {
-                for (int z = 0; z < CHUNK_SIZE; z++) {
-                    if (r.nextFloat() > 0.7f) {
-                        Blocks[x][y][z] = new Block(
-                                Block.BlockType.BlockType_Grass
-                        );
-                    } else if (r.nextFloat() > 0.4f) {
-                        Blocks[x][y][z] = new Block(
-                                Block.BlockType.BlockType_Dirt
-                        );
-                    } else if (r.nextFloat() > 0.2f) {
-                        Blocks[x][y][z] = new Block(
-                                Block.BlockType.BlockType_Water
-                        );
-                    } else if (r.nextFloat() > 0.3f){
-                        Blocks[x][y][z] = new Block(
-                                Block.BlockType.BlockType_Sand
-                        );
-                    } else if(r.nextFloat() > 0.5f) {
-                        Blocks[x][y][z] = new Block(
-                                Block.BlockType.BlockType_Stone
-                        );
-                    } else if(r.nextFloat() > 0.6f){
-                        Blocks[x][y][z] = new Block(
-                                Block.BlockType.BlockType_Bedrock
-                        );
+        for (int x = 0; x < CHUNK_SIZE; x++) 
+        {
+            for (int y = 0; y < CHUNK_SIZE; y++) 
+            {
+                for (int z = 0; z < CHUNK_SIZE; z++) 
+                {
+                    if (r.nextFloat() > 0.7f) 
+                    {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
+                    } 
+                    else if (r.nextFloat() > 0.4f) 
+                    {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Dirt);
+                    } 
+                    else if (r.nextFloat() > 0.2f)
+                    {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Water);
+                    } 
+                    else if (r.nextFloat() > 0.3f)
+                    {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
+                    } 
+                    else if(r.nextFloat() > 0.5f) 
+                    {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Stone);
+                    } 
+                    else if(r.nextFloat() > 0.6f)
+                    {
+                        Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Bedrock);
                     }
-                    else { 
+                    else 
+                    { 
                         //There wasnt a default block name in block class so I made one
                         Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Default);
                     }
@@ -219,14 +234,17 @@ public class Chunks {
         rebuildMesh(startX, startY, startZ);
     }
 
-//To create cube with texture
-    public static float[] createTexCube(float x, float y, Block block) {
+    //To create cube with texture
+    public static float[] createTexCube(float x, float y, Block block)
+    {
         float offset = (1024f / 16) / 1024f;
         System.out.println("The block id is: " + block.GetID());
-        switch (block.GetID()) {
+        switch (block.GetID()) 
+        {
             //Grass
             case 0:
-                return new float[]{
+                return new float[]
+                {
                     // TOP QUAD(DOWN=+Y)
                     x + offset * 3, y + offset * 10,
                     x + offset * 2, y + offset * 10,
@@ -256,10 +274,12 @@ public class Chunks {
                     x + offset * 3, y + offset * 0,
                     x + offset * 4, y + offset * 0,
                     x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1};
+                    x + offset * 3, y + offset * 1
+                };
                 //Sand
-                case 1:
-                return new float[]{
+            case 1:
+                return new float[]
+                {
                     // BOTTOM QUAD(DOWN=+Y)
                     x + offset * 1, y + offset * 12,
                     x + offset * 0, y + offset * 12,
@@ -289,10 +309,12 @@ public class Chunks {
                     x + offset * 1, y + offset * 12,
                     x + offset * 0, y + offset * 12,
                     x + offset * 0, y + offset * 13,
-                    x + offset * 1, y + offset * 13};
+                    x + offset * 1, y + offset * 13
+                };
                     //Water
-                case 2:
-                return new float[]{
+            case 2:
+                return new float[]
+                {
                     // TOP QUAD(DOWN=+Y)
                     x + offset * 15, y + offset * 13,
                     x + offset * 14, y + offset * 13,
@@ -322,10 +344,12 @@ public class Chunks {
                     x + offset * 16, y + offset * 13,
                     x + offset * 15, y + offset * 13,
                     x + offset * 15, y + offset * 12,
-                    x + offset * 16, y + offset * 12};
+                    x + offset * 16, y + offset * 12
+                };
                     //Dirt
-                case 3:
-                return new float[]{
+            case 3:
+                return new float[]
+                {
                     // TOP QUAD(DOWN=+Y)
                     x + offset * 2, y + offset * 11,
                     x + offset * 2, y + offset * 11,
@@ -355,10 +379,12 @@ public class Chunks {
                     x + offset * 2, y + offset * 11,
                     x + offset * 2, y + offset * 11,
                     x + offset * 1, y + offset * 10,
-                    x + offset * 1, y + offset * 10};
+                    x + offset * 1, y + offset * 10
+                };
                     //Stone
-                    case 4:
-                return new float[]{
+            case 4:
+                return new float[]
+                {
                     // BOTTOM QUAD(DOWN=+Y)
                     x + offset * 1, y + offset * 1,
                     x + offset * 0, y + offset * 1,
@@ -388,10 +414,12 @@ public class Chunks {
                     x + offset * 3, y + offset * 0,
                     x + offset * 4, y + offset * 0,
                     x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1};
-                        //Pumpkin
-                        case 5:
-                return new float[]{
+                    x + offset * 3, y + offset * 1
+                };
+            //Pumpkin
+            case 5:
+                return new float[]
+                {
                     // BOTTOM QUAD(DOWN=+Y)
                     x + offset * 7, y + offset * 7,
                     x + offset * 6, y + offset * 7,
@@ -421,10 +449,12 @@ public class Chunks {
                     x + offset * 7, y + offset * 7,
                     x + offset * 6, y + offset * 7,
                     x + offset * 6, y + offset * 8,
-                    x + offset * 7, y + offset * 8,};
+                    x + offset * 7, y + offset * 8,
+                };
                         //Default - bedrock
-                        case 6:
-                return new float[]{
+            case 6:
+                return new float[]
+                {
                     // BOTTOM QUAD(DOWN=+Y)
                     x + offset * 4, y + offset * 2,
                     x + offset * 3, y + offset * 2,
@@ -455,9 +485,10 @@ public class Chunks {
                     x + offset * 3, y + offset * 2,
                     x + offset * 3, y + offset * 1,
                     x + offset * 4, y + offset * 1
-        };
-                        default:
-                return new float[]{
+                };
+            default:
+                return new float[]
+                {
                     // BOTTOM QUAD(DOWN=+Y)
                     x + offset * 3, y + offset * 10,
                     x + offset * 2, y + offset * 10,
@@ -487,7 +518,8 @@ public class Chunks {
                     x + offset * 3, y + offset * 0,
                     x + offset * 4, y + offset * 0,
                     x + offset * 4, y + offset * 1,
-                    x + offset * 3, y + offset * 1};
+                    x + offset * 3, y + offset * 1
+                };
+        }
     }
-}
 }
