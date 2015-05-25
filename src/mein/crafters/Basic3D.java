@@ -9,7 +9,7 @@
 * purpose: This program draws multiple cubes using a chunks method, with each
  * cube textured and then randomly placed using simplex noise. There are 6 cube
  * types defined: grass, sand, water, dirt, stone, and bedrock
-***************************************************************
+ * **************************************************************
  */
 package mein.crafters;
 
@@ -40,6 +40,13 @@ import static org.lwjgl.opengl.GL11.glLight;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import org.lwjgl.util.glu.GLU;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.Sys;
+import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.glClear;
 
 /**
  *
@@ -47,7 +54,6 @@ import org.lwjgl.util.glu.GLU;
  */
 class Basic3D {
 
-    private FPCameraController fp;
     private DisplayMode displayMode;
     private FloatBuffer lightPosition;
     private FloatBuffer whiteLight;
@@ -56,8 +62,7 @@ class Basic3D {
         try {
             createWindow();
             initGL();
-            fp = new FPCameraController(0f, 0f, 0f);
-            fp.gameLoop();//render();
+            gameLoop();//render();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -65,15 +70,6 @@ class Basic3D {
     }
 
     private void initGL() {
-        //lighting stuff
-        initLightArrays();
-        glLight(GL_LIGHT0, GL_POSITION, lightPosition); //sets our light’s position
-        glLight(GL_LIGHT0, GL_SPECULAR, whiteLight);//sets our specular light
-        glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight);//sets our diffuse light
-        glLight(GL_LIGHT0, GL_AMBIENT, whiteLight);//sets our ambient light
-        glEnable(GL_LIGHTING);//enables our lighting
-        glEnable(GL_LIGHT0);//enables light0
-
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glMatrixMode(GL_PROJECTION);
         glEnable(GL_TEXTURE_2D);
@@ -85,6 +81,15 @@ class Basic3D {
         glEnableClientState(GL_COLOR_ARRAY);
         glEnable(GL_DEPTH_TEST);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
+
+        //lighting stuff
+        initLightArrays();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition); //sets our light’s position
+        glLight(GL_LIGHT0, GL_SPECULAR, whiteLight);//sets our specular light
+        glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight);//sets our diffuse light
+        glLight(GL_LIGHT0, GL_AMBIENT, whiteLight);//sets our ambient light
+        glEnable(GL_LIGHTING);//enables our lighting
+        glEnable(GL_LIGHT0);//enables light0
 
     }
 
@@ -115,4 +120,56 @@ class Basic3D {
         whiteLight.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
 
     }
+
+    public void gameLoop() {
+        FPCameraController camera = new FPCameraController(0f, 0f, 0f);
+        Chunks chunks = new Chunks(0, 0, 0);
+        float dx = 0.0f;
+        float dy = 0.0f;
+        float dt = 0.0f;
+        float lastTime = 0.0f;
+        long time = 0;
+        float mouseSensitivity = 0.09f;
+        float movementSpeed = .35f;
+        Mouse.setGrabbed(true);
+
+        while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+            time = Sys.getTime();
+            lastTime = time;
+            dx = Mouse.getDX();
+            dy = Mouse.getDY();
+            camera.yaw(dx * mouseSensitivity);
+            camera.pitch(dy * mouseSensitivity);
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+                camera.walkForward(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+                camera.strafeLeft(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+                camera.walkBackwards(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+                camera.strafeRight(movementSpeed);
+            }
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+                camera.moveUp(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                camera.moveDown(movementSpeed);
+            }
+            glLoadIdentity();
+            camera.lookThrough();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            chunks.render();
+            //render();
+            Display.update();
+            Display.sync(60);
+        }
+        Display.destroy();
+    }
+
 }

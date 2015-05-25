@@ -16,10 +16,6 @@ package mein.crafters;
 import java.nio.FloatBuffer;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.Display;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.Sys;
 import static org.lwjgl.opengl.GL11.*;
 
 public class FPCameraController {
@@ -49,7 +45,6 @@ public class FPCameraController {
     }
 
     public void walkForward(float distance) {
-
         float xOffset = distance * (float) Math.sin(Math.toRadians(yaw));
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
         position.x -= xOffset;
@@ -91,10 +86,16 @@ public class FPCameraController {
 
     public void moveUp(float distance) {
         position.y -= distance;
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     public void moveDown(float distance) {
         position.y += distance;
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     public void lookThrough() {
@@ -104,107 +105,6 @@ public class FPCameraController {
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
         lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
-    }
-
-    public void gameLoop() {
-        FPCameraController camera = new FPCameraController(0f, 0f, 0f);
-        Chunks chunks = new Chunks(0, 0, 0);
-        float dx = 0.0f;
-        float dy = 0.0f;
-        float dt = 0.0f;
-        float lastTime = 0.0f;
-        long time = 0;
-        float mouseSensitivity = 0.09f;
-        float movementSpeed = .35f;
-        Mouse.setGrabbed(true);
-
-        while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
-            time = Sys.getTime();
-            lastTime = time;
-            dx = Mouse.getDX();
-            dy = Mouse.getDY();
-            camera.yaw(dx * mouseSensitivity);
-            camera.pitch(dy * mouseSensitivity);
-
-            if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-                camera.walkForward(movementSpeed);
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-                camera.strafeLeft(movementSpeed);
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
-                camera.walkBackwards(movementSpeed);
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
-                camera.strafeRight(movementSpeed);
-            }
-
-            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-                camera.moveUp(movementSpeed);
-            }
-            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
-                camera.moveDown(movementSpeed);
-            }
-            glLoadIdentity();
-            camera.lookThrough();
-            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-            chunks.render();
-            //render();
-            Display.update();
-            Display.sync(60);
-        }
-        Display.destroy();
-    }
-
-    public void render() {
-        try {
-            glBegin(GL_QUADS);
-            //top
-            glColor3f(1.0f, 0.0f, 0.0f);
-            glVertex3f(1.0f, 1.0f, -1.0f);
-            glVertex3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(-1.0f, 1.0f, 1.0f);
-            glVertex3f(1.0f, 1.0f, 1.0f);
-
-            //bottom
-            glColor3f(1.0f, 1.0f, 0.0f);
-            glVertex3f(1.0f, -1.0f, 1.0f);
-            glVertex3f(-1.0f, -1.0f, 1.0f);
-            glVertex3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(1.0f, -1.0f, -1.0f);
-
-            //front
-            glColor3f(1.0f, 0.5f, 0.0f);
-            glVertex3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(1.0f, 1.0f, -1.0f);
-            glVertex3f(1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f, -1.0f, -1.0f);
-
-            //back
-            glColor3f(0.0f, 0.5f, 0.0f);
-            glVertex3f(1.0f, 1.0f, 1.0f);
-            glVertex3f(-1.0f, 1.0f, 1.0f);
-            glVertex3f(-1.0f, -1.0f, 1.0f);
-            glVertex3f(1.0f, -1.0f, 1.0f);
-
-            //left           
-            glColor3f(0.0f, 0.0f, 1.0f);
-            glVertex3f(-1.0f, 1.0f, 1.0f);
-            glVertex3f(-1.0f, 1.0f, -1.0f);
-            glVertex3f(-1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f, -1.0f, 1.0f);
-
-            //right            
-            glColor3f(0.0f, 1.0f, 0.0f); //
-            glVertex3f(1.0f, 1.0f, -1.0f);
-            glVertex3f(1.0f, 1.0f, 1.0f);
-            glVertex3f(1.0f, -1.0f, 1.0f);
-            glVertex3f(1.0f, -1.0f, -1.0f);
-            glEnd();
-        } catch (Exception e) {
-
-        }
     }
 
 }
