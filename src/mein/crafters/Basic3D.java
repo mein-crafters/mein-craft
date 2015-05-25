@@ -142,6 +142,7 @@ class Basic3D {
             camera.pitch(dy * mouseSensitivity);
 
             if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+                
                 camera.walkForward(movementSpeed);
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {

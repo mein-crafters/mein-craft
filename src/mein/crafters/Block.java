@@ -14,6 +14,8 @@
 ****************************************************************/ 
 package mein.crafters;
 
+import org.lwjgl.util.vector.Vector3f;
+
 public class Block {
 
     private boolean IsActive;
@@ -27,7 +29,7 @@ public class Block {
         BlockType_Water(2),
         BlockType_Dirt(3),
         BlockType_Stone(4),
-        BlockType_Bedrock(5),
+        BlockType_Pumpkin(5),
         BlockType_Default(6);
         private int BlockID;
 
@@ -54,14 +56,13 @@ public class Block {
         this.z = z;
     }
     
-    public float getX(){
-        return this.x;
-    }
-    public float getY(){
-        return this.y;
-    }
-    public float getZ(){
-        return this.z;
+    public boolean checkCollision(Vector3f camera){
+        if(camera.x < this.x && camera.y < this.y && camera.z < this.z){
+            return true;
+        } else {
+           return false;
+        }
+        
     }
 
     public boolean IsActive() {

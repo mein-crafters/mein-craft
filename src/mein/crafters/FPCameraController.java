@@ -106,5 +106,9 @@ public class FPCameraController {
         lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
+    
+    public Vector3f getPosition(){
+        return position;
+    }
 
 }
