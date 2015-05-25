@@ -1,21 +1,20 @@
-/***************************************************************
-*  Team members: Michael Ortiz, Daniel Lin, Peter Maxwell
-*  Team Name: Mein-crafters
-*  file: Basic3D.java
-*  author: T. Diaz
-*  class: CS 445 – Computer Graphics
-*
-*  Final Project: checkpoint 2
-*  date last modified: 5/18/2015
-*
-*  purpose: This program draws multiple cubes using a chunks method, with each cube
-*  textured and then randomly placed using simplex noise. There are 6 cube types defined:
-*  grass, sand, water, dirt, stone, and bedrock
-****************************************************************/ 
-
+/**
+ * *************************************************************
+ * Team members: Michael Ortiz, Daniel Lin, Peter Maxwell Team Name:
+ * Mein-crafters file: Basic3D.java author: T. Diaz class: CS 445 – Computer
+ * Graphics
+ * 
+* Final Project: checkpoint 2 date last modified: 5/18/2015
+ * 
+* purpose: This program draws multiple cubes using a chunks method, with each
+ * cube textured and then randomly placed using simplex noise. There are 6 cube
+ * types defined: grass, sand, water, dirt, stone, and bedrock
+ * **************************************************************
+ */
 package mein.crafters;
 
-
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.util.vector.Vector3f;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
@@ -23,175 +22,179 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.Sys;
 import static org.lwjgl.opengl.GL11.*;
 
-public class FPCameraController
- {
-   private Vector3f position = null;
-   private Vector3f lPosition = null;
+public class FPCameraController {
+
+    private Vector3f position = null;
+    private Vector3f lPosition = null;
+
+    private float yaw = 0.0f;
+    private float pitch = 0.0f;
+    private Vector3Float me;
     
-   private float yaw = 0.0f;
-   private float pitch = 0.0f;
-   private Vector3Float me;
-    
-   public FPCameraController(float x, float y, float z)
-   {
-      position = new Vector3f(x, y, z);
-      lPosition = new Vector3f(x, y, z);
-      lPosition.x = 0f;
-      lPosition.y = 15f;
-      lPosition.z = 0f;
-   }
-    
-   public void yaw(float amount)
-   {
-      yaw = yaw + amount;
-   }
-   
-   public void pitch(float amount)
-   {
-      pitch = pitch - amount;
-   }
-   
-   public void walkForward(float distance)
-   {
-      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw));
-      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw));
-      position.x -= xOffset;
-      position.z += zOffset;
-   }
-   public void walkBackwards(float distance)
-   {
-      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw));
-      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw));
-      position.x += xOffset;
-      position.z -= zOffset;
-   }
-   public void strafeLeft(float distance)
-   {
-      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw + 90));
-      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw + 90));
-      position.x += xOffset;
-      position.z -= zOffset;
-   }
-   public void strafeRight(float distance)
-   {
-      float xOffset = distance*(float)Math.sin(Math.toRadians(yaw - 90));
-      float zOffset = distance*(float)Math.cos(Math.toRadians(yaw - 90));
-      position.x += xOffset;
-      position.z -= zOffset;      
-   }
-   public void moveUp(float distance)
-   {
-      position.y -= distance;
-   }
-   public void moveDown(float distance)
-   {
-      position.y += distance;
-   }
-   
-   public void lookThrough()
-   {
-      glRotatef(pitch, 1.0f, 0.0f, 0.0f);
-      glRotatef(yaw, 0.0f, 1.0f, 0.0f);
-      glTranslatef(position.x, position.y, position.z);
-   }
-   public void gameLoop()
-   {
-      FPCameraController camera = new FPCameraController(0f, 0f, 0f);
-      Chunks chunks = new Chunks(0,0,0);
-      float dx = 0.0f;
-      float dy = 0.0f;
-      float dt = 0.0f;
-      float lastTime = 0.0f;
-      long time = 0;
-      float mouseSensitivity = 0.09f;
-      float movementSpeed = .35f;
-      Mouse.setGrabbed(true);
-      
-      while(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
-      {
-         time = Sys.getTime();
-         lastTime = time;
-         dx = Mouse.getDX();
-         dy = Mouse.getDY();
-         camera.yaw(dx*mouseSensitivity);
-         camera.pitch(dy*mouseSensitivity);
-         
-         if(Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP))
-         {
-            camera.walkForward(movementSpeed);
-         }
-         if(Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT))
-         {
-            camera.strafeLeft(movementSpeed);
-         }         
-         if(Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN))          
-         {
-            camera.walkBackwards(movementSpeed);
-         }      
-         if(Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT))
-         {
-            camera.strafeRight(movementSpeed);
-         }
-         
-         if(Keyboard.isKeyDown(Keyboard.KEY_SPACE))
-         {
-            camera.moveUp(movementSpeed);
-         }
-         if(Keyboard.isKeyDown(Keyboard.KEY_LSHIFT))
-         {
-            camera.moveDown(movementSpeed);
-         }    
-         glLoadIdentity();
-         camera.lookThrough();
-         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-         
-         chunks.render();
-         //render();
-         Display.update();
-         Display.sync(60);       
-      }
-      Display.destroy();
-   }
-   public void render()
-   {
-      try
-      {
+
+    public FPCameraController(float x, float y, float z) {
+        position = new Vector3f(x, y, z);
+        lPosition = new Vector3f(x, y, z);
+        lPosition.x = 0f;
+        lPosition.y = 15f;
+        lPosition.z = 0f;
+    }
+
+    public void yaw(float amount) {
+        yaw = yaw + amount;
+    }
+
+    public void pitch(float amount) {
+        pitch = pitch - amount;
+    }
+
+    public void walkForward(float distance) {
+
+        float xOffset = distance * (float) Math.sin(Math.toRadians(yaw));
+        float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
+        position.x -= xOffset;
+        position.z += zOffset;
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+    }
+
+    public void walkBackwards(float distance) {
+        float xOffset = distance * (float) Math.sin(Math.toRadians(yaw));
+        float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
+        position.x += xOffset;
+        position.z -= zOffset;
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+    }
+
+    public void strafeLeft(float distance) {
+        float xOffset = distance * (float) Math.sin(Math.toRadians(yaw + 90));
+        float zOffset = distance * (float) Math.cos(Math.toRadians(yaw + 90));
+        position.x += xOffset;
+        position.z -= zOffset;
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+    }
+
+    public void strafeRight(float distance) {
+        float xOffset = distance * (float) Math.sin(Math.toRadians(yaw - 90));
+        float zOffset = distance * (float) Math.cos(Math.toRadians(yaw - 90));
+        position.x += xOffset;
+        position.z -= zOffset;
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+    }
+
+    public void moveUp(float distance) {
+        position.y -= distance;
+    }
+
+    public void moveDown(float distance) {
+        position.y += distance;
+    }
+
+    public void lookThrough() {
+        glRotatef(pitch, 1.0f, 0.0f, 0.0f);
+        glRotatef(yaw, 0.0f, 1.0f, 0.0f);
+        glTranslatef(position.x, position.y, position.z);
+        FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
+        lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition);
+    }
+
+    public void gameLoop() {
+        FPCameraController camera = new FPCameraController(0f, 0f, 0f);
+        Chunks chunks = new Chunks(0, 0, 0);
+        float dx = 0.0f;
+        float dy = 0.0f;
+        float dt = 0.0f;
+        float lastTime = 0.0f;
+        long time = 0;
+        float mouseSensitivity = 0.09f;
+        float movementSpeed = .35f;
+        Mouse.setGrabbed(true);
+
+        while (!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+            time = Sys.getTime();
+            lastTime = time;
+            dx = Mouse.getDX();
+            dy = Mouse.getDY();
+            camera.yaw(dx * mouseSensitivity);
+            camera.pitch(dy * mouseSensitivity);
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
+                camera.walkForward(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
+                camera.strafeLeft(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+                camera.walkBackwards(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+                camera.strafeRight(movementSpeed);
+            }
+
+            if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+                camera.moveUp(movementSpeed);
+            }
+            if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
+                camera.moveDown(movementSpeed);
+            }
+            glLoadIdentity();
+            camera.lookThrough();
+            glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+            chunks.render();
+            //render();
+            Display.update();
+            Display.sync(60);
+        }
+        Display.destroy();
+    }
+
+    public void render() {
+        try {
             glBegin(GL_QUADS);
             //top
-            glColor3f(1.0f, 0.0f, 0.0f); 
+            glColor3f(1.0f, 0.0f, 0.0f);
             glVertex3f(1.0f, 1.0f, -1.0f);
             glVertex3f(-1.0f, 1.0f, -1.0f);
             glVertex3f(-1.0f, 1.0f, 1.0f);
             glVertex3f(1.0f, 1.0f, 1.0f);
-            
+
             //bottom
-            glColor3f(1.0f, 1.0f, 0.0f);  
+            glColor3f(1.0f, 1.0f, 0.0f);
             glVertex3f(1.0f, -1.0f, 1.0f);
             glVertex3f(-1.0f, -1.0f, 1.0f);
             glVertex3f(-1.0f, -1.0f, -1.0f);
             glVertex3f(1.0f, -1.0f, -1.0f);
-            
+
             //front
             glColor3f(1.0f, 0.5f, 0.0f);
             glVertex3f(-1.0f, 1.0f, -1.0f);
             glVertex3f(1.0f, 1.0f, -1.0f);
             glVertex3f(1.0f, -1.0f, -1.0f);
-            glVertex3f(-1.0f, -1.0f, -1.0f);        
-            
+            glVertex3f(-1.0f, -1.0f, -1.0f);
+
             //back
-            glColor3f(0.0f, 0.5f, 0.0f);     
+            glColor3f(0.0f, 0.5f, 0.0f);
             glVertex3f(1.0f, 1.0f, 1.0f);
             glVertex3f(-1.0f, 1.0f, 1.0f);
             glVertex3f(-1.0f, -1.0f, 1.0f);
             glVertex3f(1.0f, -1.0f, 1.0f);
-            
+
             //left           
             glColor3f(0.0f, 0.0f, 1.0f);
             glVertex3f(-1.0f, 1.0f, 1.0f);
             glVertex3f(-1.0f, 1.0f, -1.0f);
             glVertex3f(-1.0f, -1.0f, -1.0f);
             glVertex3f(-1.0f, -1.0f, 1.0f);
-            
+
             //right            
             glColor3f(0.0f, 1.0f, 0.0f); //
             glVertex3f(1.0f, 1.0f, -1.0f);
@@ -199,11 +202,9 @@ public class FPCameraController
             glVertex3f(1.0f, -1.0f, 1.0f);
             glVertex3f(1.0f, -1.0f, -1.0f);
             glEnd();
-      }
-      catch(Exception e)
-      {
-         
-      }
-   }
+        } catch (Exception e) {
+
+        }
+    }
 
 }

@@ -1,27 +1,34 @@
-/***************************************************************
-*  Team members: Michael Ortiz, Daniel Lin, Peter Maxwell
-*  Team Name: Mein-crafters
-*  file: Basic3D.java
-*  author: T. Diaz
-*  class: CS 445 – Computer Graphics
-*
-*  Final Project: checkpoint 2
-*  date last modified: 5/18/2015
-*
-*  purpose: This program draws multiple cubes using a chunks method, with each cube
-*  textured and then randomly placed using simplex noise. There are 6 cube types defined:
-*  grass, sand, water, dirt, stone, and bedrock
-****************************************************************/ 
+/**
+ * *************************************************************
+ * Team members: Michael Ortiz, Daniel Lin, Peter Maxwell Team Name:
+ * Mein-crafters file: Basic3D.java author: T. Diaz class: CS 445 – Computer
+ * Graphics
+ * 
+* Final Project: final Checkpoint date last modified: 5/18/2015
+ * 
+* purpose: This program draws multiple cubes using a chunks method, with each
+ * cube textured and then randomly placed using simplex noise. There are 6 cube
+ * types defined: grass, sand, water, dirt, stone, and bedrock
+***************************************************************
+ */
 package mein.crafters;
 
+import java.nio.FloatBuffer;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.DisplayMode;
+import static org.lwjgl.opengl.GL11.GL_AMBIENT;
 import static org.lwjgl.opengl.GL11.GL_COLOR_ARRAY;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_DIFFUSE;
+import static org.lwjgl.opengl.GL11.GL_LIGHT0;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
 import static org.lwjgl.opengl.GL11.GL_MODELVIEW;
 import static org.lwjgl.opengl.GL11.GL_NICEST;
 import static org.lwjgl.opengl.GL11.GL_PERSPECTIVE_CORRECTION_HINT;
+import static org.lwjgl.opengl.GL11.GL_POSITION;
 import static org.lwjgl.opengl.GL11.GL_PROJECTION;
+import static org.lwjgl.opengl.GL11.GL_SPECULAR;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_2D;
 import static org.lwjgl.opengl.GL11.GL_TEXTURE_COORD_ARRAY;
 import static org.lwjgl.opengl.GL11.GL_VERTEX_ARRAY;
@@ -29,6 +36,7 @@ import static org.lwjgl.opengl.GL11.glClearColor;
 import static org.lwjgl.opengl.GL11.glEnable;
 import static org.lwjgl.opengl.GL11.glEnableClientState;
 import static org.lwjgl.opengl.GL11.glHint;
+import static org.lwjgl.opengl.GL11.glLight;
 import static org.lwjgl.opengl.GL11.glLoadIdentity;
 import static org.lwjgl.opengl.GL11.glMatrixMode;
 import org.lwjgl.util.glu.GLU;
@@ -41,6 +49,8 @@ class Basic3D {
 
     private FPCameraController fp;
     private DisplayMode displayMode;
+    private FloatBuffer lightPosition;
+    private FloatBuffer whiteLight;
 
     public void start() {
         try {
@@ -55,6 +65,15 @@ class Basic3D {
     }
 
     private void initGL() {
+        //lighting stuff
+        initLightArrays();
+        glLight(GL_LIGHT0, GL_POSITION, lightPosition); //sets our light’s position
+        glLight(GL_LIGHT0, GL_SPECULAR, whiteLight);//sets our specular light
+        glLight(GL_LIGHT0, GL_DIFFUSE, whiteLight);//sets our diffuse light
+        glLight(GL_LIGHT0, GL_AMBIENT, whiteLight);//sets our ambient light
+        glEnable(GL_LIGHTING);//enables our lighting
+        glEnable(GL_LIGHT0);//enables light0
+
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glMatrixMode(GL_PROJECTION);
         glEnable(GL_TEXTURE_2D);
@@ -66,7 +85,7 @@ class Basic3D {
         glEnableClientState(GL_COLOR_ARRAY);
         glEnable(GL_DEPTH_TEST);
         glHint(GL_PERSPECTIVE_CORRECTION_HINT, GL_NICEST);
-        
+
     }
 
     private void createWindow() throws Exception {
@@ -83,5 +102,17 @@ class Basic3D {
         Display.setDisplayMode(displayMode);
         Display.setTitle("Mein-Crafter!");
         Display.create();
+    }
+
+    private void initLightArrays() {
+        lightPosition = BufferUtils.createFloatBuffer(4);
+        //This is where we want to map our light source to be 
+        //in the world we make
+        lightPosition.put(0.0f).put(0.0f).put(0.0f).put(1.0f).flip();
+
+        whiteLight = BufferUtils.createFloatBuffer(4);
+        //color value for white light
+        whiteLight.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
+
     }
 }
