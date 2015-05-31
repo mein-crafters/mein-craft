@@ -117,7 +117,7 @@ class Basic3D {
 
         whiteLight = BufferUtils.createFloatBuffer(4);
         //color value for white light
-        whiteLight.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
+        whiteLight.put(3.0f).put(3.0f).put(3.0f).put(3.0f).flip();
 
     }
 
