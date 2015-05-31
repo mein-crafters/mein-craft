@@ -122,7 +122,7 @@ class Basic3D {
     }
 
     public void gameLoop() {
-        FPCameraController camera = new FPCameraController(0f, 0f, 0f);
+        FPCameraController camera = new FPCameraController(-10f, -70f, -20f);
         Chunks chunks = new Chunks(0, 0, 0);
         float dx = 0.0f;
         float dy = 0.0f;

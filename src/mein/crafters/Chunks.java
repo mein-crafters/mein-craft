@@ -210,7 +210,7 @@ public class Chunks {
     //To create cube with texture
     public static float[] createTexCube(float x, float y, Block block) {
         float offset = (1024f / 16) / 1024f;
-        System.out.println("The block id is: " + block.GetID());
+        //System.out.println("The block id is: " + block.GetID());
         switch (block.GetID()) {
             //Grass
             case 0:
