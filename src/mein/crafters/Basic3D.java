@@ -142,8 +142,11 @@ class Basic3D {
             camera.pitch(dy * mouseSensitivity);
 
             if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
-                
-                camera.walkForward(movementSpeed);
+                if(!chunks.collision(camera.getPosition())){
+                    camera.walkForward(movementSpeed);
+                }else {
+                    System.out.println("Collision!!!!");
+                }
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
                 camera.strafeLeft(movementSpeed);

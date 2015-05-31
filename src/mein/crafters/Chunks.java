@@ -19,6 +19,7 @@ import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import mein.crafters.SimplexNoise_octave;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -486,5 +487,23 @@ public class Chunks {
             x + offset * 3, y + offset * 1,
             x + offset * 4, y + offset * 1
         };
+    }
+    
+    boolean collision(Vector3f camera) {
+        //some manipulation of this will get me in the right coordinate cube
+        int x = (int) (-1 * camera.x);
+        int y = (int) (-1 * camera.y);
+        int z = (int) (-1 * camera.z);
+        if((x >= 0 && x < CHUNK_SIZE) && (y >= 0 && y < CHUNK_SIZE) && (z >= 0 && z < CHUNK_SIZE)){
+            return true;
+        } else {
+            return false;
+        }
+//        if((Math.abs(camera.x) < CHUNK_SIZE && Math.abs(camera.x) > 0) && (Math.abs(camera.y) < CHUNK_SIZE && Math.abs(camera.y) > 0) && (Math.abs(camera.z) < CHUNK_SIZE && Math.abs(camera.z) > 0)){
+//             return Blocks[(int)Math.abs(camera.x)][(int)Math.abs(camera.y)][(int)Math.abs(camera.z)].checkCollision(camera);
+//        }
+//        else {
+//            return false;
+//        }
     }
 }

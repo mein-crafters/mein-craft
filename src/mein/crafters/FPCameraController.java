@@ -49,6 +49,7 @@ public class FPCameraController {
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
         position.x -= xOffset;
         position.z += zOffset;
+        System.out.println("I am at these coordinates. X: " + position.x + " Y: " + position.y + " Z: " + position.z);
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
         lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
