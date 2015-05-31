@@ -31,9 +31,9 @@ public class FPCameraController {
     public FPCameraController(float x, float y, float z) {
         position = new Vector3f(x, y, z);
         lPosition = new Vector3f(x, y, z);
-//        lPosition.x = 0f;
-//        lPosition.y = 0f;
-//        lPosition.z = 0f;
+        lPosition.x = 15f;
+        lPosition.y = 60f;
+        lPosition.z = 30f;
     }
 
     public void yaw(float amount) {
@@ -51,7 +51,7 @@ public class FPCameraController {
         position.z += zOffset;
         System.out.println("I am at these coordinates. X: " + -position.x + " Y: " + -position.y + " Z: " + position.z);
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
@@ -61,7 +61,7 @@ public class FPCameraController {
         position.x += xOffset;
         position.z -= zOffset;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
@@ -71,7 +71,7 @@ public class FPCameraController {
         position.x += xOffset;
         position.z -= zOffset;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
@@ -81,7 +81,7 @@ public class FPCameraController {
         position.x += xOffset;
         position.z -= zOffset;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 

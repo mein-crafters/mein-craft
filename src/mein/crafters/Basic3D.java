@@ -117,12 +117,12 @@ class Basic3D {
 
         whiteLight = BufferUtils.createFloatBuffer(4);
         //color value for white light
-        whiteLight.put(1.0f).put(1.0f).put(1.0f).put(0.0f).flip();
+        whiteLight.put(3.0f).put(3.0f).put(3.0f).put(3.0f).flip();
 
     }
 
     public void gameLoop() {
-        FPCameraController camera = new FPCameraController(0f, 0f, 0f);
+        FPCameraController camera = new FPCameraController(-10f, -70f, -20f);
         Chunks chunks = new Chunks(0, 0, 0);
         float dx = 0.0f;
         float dy = 0.0f;
@@ -147,8 +147,6 @@ class Basic3D {
                 }else {
                     System.out.println("Collision!!!!");
                 }
-                
-                
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
                 camera.strafeLeft(movementSpeed);
