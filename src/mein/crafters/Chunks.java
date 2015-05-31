@@ -495,7 +495,8 @@ public class Chunks {
         int x = (int) (-1 * camera.x);
         int y = (int) (-1 * camera.y);
         int z = (int) (-1 * camera.z);
-        if((x >= 0 && x < CHUNK_SIZE) && (y >= 0 && y < CHUNK_SIZE) && (z >= 0 && z < CHUNK_SIZE)){
+        if((x >= 0 && x < CHUNK_SIZE * 2) && (y >= 0 && y < CHUNK_SIZE * 2) && (z >= 0 && z < CHUNK_SIZE * 2)){
+            System.out.println("The collision happened at- X: " + x + " Y: " + y + " Z: " + z );
             return true;
         } else {
             return false;
