@@ -31,9 +31,9 @@ public class FPCameraController {
     public FPCameraController(float x, float y, float z) {
         position = new Vector3f(x, y, z);
         lPosition = new Vector3f(x, y, z);
-        lPosition.x = 0f;
-        lPosition.y = 15f;
-        lPosition.z = 0f;
+//        lPosition.x = 0f;
+//        lPosition.y = 0f;
+//        lPosition.z = 0f;
     }
 
     public void yaw(float amount) {
@@ -49,6 +49,7 @@ public class FPCameraController {
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
         position.x -= xOffset;
         position.z += zOffset;
+        System.out.println("I am at these coordinates. X: " + position.x + " Y: " + position.y + " Z: " + position.z);
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
         lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
@@ -87,14 +88,14 @@ public class FPCameraController {
     public void moveUp(float distance) {
         position.y -= distance;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+        lightPosition.put(lPosition.x).put(lPosition.y += distance).put(lPosition.z).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
     public void moveDown(float distance) {
         position.y += distance;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+        lightPosition.put(lPosition.x).put(lPosition.y -= distance).put(lPosition.z).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 

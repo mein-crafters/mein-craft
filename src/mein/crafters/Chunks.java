@@ -19,6 +19,7 @@ import org.lwjgl.BufferUtils;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL15.*;
 import mein.crafters.SimplexNoise_octave;
+import org.lwjgl.util.vector.Vector3f;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 import org.newdawn.slick.util.ResourceLoader;
@@ -78,10 +79,11 @@ public class Chunks {
                     int specialHeight = y * CUBE_LENGTH + (int) height;
                     if (specialHeight > 20) {
                         VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) specialHeight, (float) (startZ + z * CUBE_LENGTH)));
+                        System.out.println("\nCube: " + (startX + x * CUBE_LENGTH) + " Y: " + specialHeight + " Z: " + (startZ + z * CUBE_LENGTH));
+                        Blocks[(int)x][(int)y][(int)z].setCoords((startX + x * CUBE_LENGTH), specialHeight, (startZ + z * CUBE_LENGTH));
                         VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
                         VertexTextureData.put(createTexCube((float) 0, (float) 0, Blocks[(int) (x)][(int) (y)][(int) (z)]));
                     }
-
                 }
             }
         }
@@ -101,7 +103,6 @@ public class Chunks {
         glBindBuffer(GL_ARRAY_BUFFER, VBOColorHandle);
         glBufferData(GL_ARRAY_BUFFER, VertexColorData, GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-
     }
 
     private float[] createCubeVertexCol(float[] CubeColorArray) {
@@ -210,7 +211,7 @@ public class Chunks {
     //To create cube with texture
     public static float[] createTexCube(float x, float y, Block block) {
         float offset = (1024f / 16) / 1024f;
-        System.out.println("The block id is: " + block.GetID());
+//        System.out.println("The block id is: " + block.GetID());
         switch (block.GetID()) {
             //Grass
             case 0:
@@ -486,5 +487,25 @@ public class Chunks {
             x + offset * 3, y + offset * 1,
             x + offset * 4, y + offset * 1
         };
+    }
+    
+
+    boolean collision(Vector3f camera) {
+        //some manipulation of this will get me in the right coordinate cube
+        int x = (int) (-1 * camera.x);
+        int y = (int) (-1 * camera.y);
+        int z = (int) (-1 * camera.z);
+        if((x >= 0 && x < CHUNK_SIZE) && (y >= 0 && y < CHUNK_SIZE) && (z >= 0 && z < CHUNK_SIZE)){
+            return true;
+        } else {
+            return false;
+        }
+//        if((Math.abs(camera.x) < CHUNK_SIZE && Math.abs(camera.x) > 0) && (Math.abs(camera.y) < CHUNK_SIZE && Math.abs(camera.y) > 0) && (Math.abs(camera.z) < CHUNK_SIZE && Math.abs(camera.z) > 0)){
+//             return Blocks[(int)Math.abs(camera.x)][(int)Math.abs(camera.y)][(int)Math.abs(camera.z)].checkCollision(camera);
+//        }
+//        else {
+//            return false;
+//        }
+       
     }
 }

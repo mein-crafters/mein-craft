@@ -22,6 +22,10 @@ public class Block {
     private BlockType Type;
     private float x, y, z;
 
+    boolean IsTrue() {
+        return true;
+    }
+
     public enum BlockType {
 
         BlockType_Grass(0),
