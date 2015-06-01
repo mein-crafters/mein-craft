@@ -5,8 +5,7 @@
 *  author: T. Diaz
 *  class: CS 445 – Computer Graphics
 *
-*  Final Project: checkpoint 2
-*  date last modified: 5/18/2015
+* Final Project: date last modified: 6/1/2015
 *
 *  purpose: This program draws multiple cubes using a chunks method, with each cube
 *  textured and then randomly placed using simplex noise. There are 6 cube types defined:
@@ -37,6 +36,8 @@ public class Block {
         BlockType_Default(6);
         private int BlockID;
 
+        
+        
         BlockType(int i) {
             BlockID = i;
         }

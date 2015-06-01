@@ -4,7 +4,7 @@
  * Mein-crafters file: Basic3D.java author: T. Diaz class: CS 445 – Computer
  * Graphics
  * 
-* Final Project: checkpoint 2 date last modified: 5/18/2015
+* Final Project: date last modified: 6/1/2015
  * 
 * purpose: This program draws multiple cubes using a chunks method, with each
  * cube textured and then randomly placed using simplex noise. There are 6 cube
@@ -26,7 +26,6 @@ public class FPCameraController {
     private float yaw = 0.0f;
     private float pitch = 0.0f;
     private Vector3Float me;
-    
 
     public FPCameraController(float x, float y, float z) {
         position = new Vector3f(x, y, z);
@@ -43,45 +42,67 @@ public class FPCameraController {
     public void pitch(float amount) {
         pitch = pitch - amount;
     }
-
-    public void walkForward(float distance) {
+    //for the walk and strafe method, lightmove is a boolean value that if a button is pressed
+    // the lgiht source will move with the user
+    public void walkForward(float distance, boolean lightMove) {
         float xOffset = distance * (float) Math.sin(Math.toRadians(yaw));
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
         position.x -= xOffset;
         position.z += zOffset;
         System.out.println("I am at these coordinates. X: " + -position.x + " Y: " + -position.y + " Z: " + position.z);
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        if (lightMove) {
+            lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z -= zOffset).put(1.0f).flip();
+        } else {
+            lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+
+        }
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
-    public void walkBackwards(float distance) {
+    public void walkBackwards(float distance, boolean lightMove) {
         float xOffset = distance * (float) Math.sin(Math.toRadians(yaw));
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw));
         position.x += xOffset;
         position.z -= zOffset;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+        if (lightMove) {
+            lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+        } else {
+            lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+
+        }
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
-
-    public void strafeLeft(float distance) {
+    
+    public void strafeLeft(float distance, boolean lightMove) {
         float xOffset = distance * (float) Math.sin(Math.toRadians(yaw + 90));
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw + 90));
         position.x += xOffset;
         position.z -= zOffset;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+        if (lightMove) {
+            lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+        } else {
+            lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+
+        }
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
-    public void strafeRight(float distance) {
+    public void strafeRight(float distance, boolean lightMove) {
         float xOffset = distance * (float) Math.sin(Math.toRadians(yaw - 90));
         float zOffset = distance * (float) Math.cos(Math.toRadians(yaw - 90));
         position.x += xOffset;
         position.z -= zOffset;
         FloatBuffer lightPosition = BufferUtils.createFloatBuffer(4);
-        lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+        if (lightMove) {
+            lightPosition.put(lPosition.x -= xOffset).put(lPosition.y).put(lPosition.z += zOffset).put(1.0f).flip();
+
+        } else {
+            lightPosition.put(lPosition.x += xOffset).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
+
+        }
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
 
@@ -107,8 +128,8 @@ public class FPCameraController {
         lightPosition.put(lPosition.x).put(lPosition.y).put(lPosition.z).put(1.0f).flip();
         glLight(GL_LIGHT0, GL_POSITION, lightPosition);
     }
-    
-    public Vector3f getPosition(){
+
+    public Vector3f getPosition() {
         return position;
     }
 

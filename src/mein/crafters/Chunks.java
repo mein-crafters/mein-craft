@@ -4,7 +4,7 @@
  * Mein-crafters file: Chunks.java author: T. Diaz class: CS 445 – Computer
  * Graphics
  * 
-* Final Project: checkpoint 2 date last modified: 5/18/2015
+* Final Project: date last modified: 6/1/2015
  * 
 * purpose: This program draws multiple cubes using a chunks method, with each
  * cube textured and then randomly placed using simplex noise. There are 6 cube
@@ -191,7 +191,9 @@ public class Chunks {
                             Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Sand);
                         } else if (r.nextFloat() > 0.2f && y >= CHUNK_SIZE - 1) {
                             Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Pumpkin);
-                        } else {
+                        } 
+                        else 
+                        {
                             Blocks[x][y][z] = new Block(Block.BlockType.BlockType_Grass);
                         }
                     } else {

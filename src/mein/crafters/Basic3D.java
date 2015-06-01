@@ -4,7 +4,7 @@
  * Mein-crafters file: Basic3D.java author: T. Diaz class: CS 445 – Computer
  * Graphics
  * 
-* Final Project: final Checkpoint date last modified: 5/18/2015
+* Final Project: date last modified: 6/1/2015
  * 
 * purpose: This program draws multiple cubes using a chunks method, with each
  * cube textured and then randomly placed using simplex noise. There are 6 cube
@@ -51,7 +51,7 @@ import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.GL_FRONT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glCullFace;
-
+import java.util.Random;
 /**
  *
  * @author michael
@@ -61,6 +61,7 @@ class Basic3D {
     private DisplayMode displayMode;
     private FloatBuffer lightPosition;
     private FloatBuffer whiteLight;
+    private boolean lightMove = false;
 
     public void start() {
         try {
@@ -130,7 +131,9 @@ class Basic3D {
 
     public void gameLoop() {
         FPCameraController camera = new FPCameraController(-10f, -70f, -20f);
+
         Chunks chunks = new Chunks(0, 0, 0);
+        
         float dx = 0.0f;
         float dy = 0.0f;
         float dt = 0.0f;
@@ -150,14 +153,14 @@ class Basic3D {
 
             if (Keyboard.isKeyDown(Keyboard.KEY_W) || Keyboard.isKeyDown(Keyboard.KEY_UP)) {
                 if(!chunks.collision(camera.getPosition())){
-                    camera.walkForward(movementSpeed);
+                    camera.walkForward(movementSpeed, lightMove);
                 }else {
                     System.out.println("Collision!!!!");
                 }
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
                 if(!chunks.collision(camera.getPosition())){
-                    camera.strafeLeft(movementSpeed);
+                    camera.strafeLeft(movementSpeed, lightMove);
                 } else {
                     
                 }
@@ -165,14 +168,14 @@ class Basic3D {
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
                 if(!chunks.collision(camera.getPosition())){
-                camera.walkBackwards(movementSpeed);
+                camera.walkBackwards(movementSpeed, lightMove);
                 } else {
                     
                 }
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
                 if(!chunks.collision(camera.getPosition())){
-                camera.strafeRight(movementSpeed);
+                camera.strafeRight(movementSpeed, lightMove);
                 } else {}
             }
 
@@ -182,6 +185,32 @@ class Basic3D {
             if (Keyboard.isKeyDown(Keyboard.KEY_LSHIFT)) {
                 camera.moveDown(movementSpeed);
             }
+            
+            //if l key is held down light source will move as camera moves otherwise --> half lit/half dim
+            if(Keyboard.isKeyDown(Keyboard.KEY_L)){
+                lightMove = true;
+            } else {
+                lightMove = false;
+            }
+            
+            //regenerates landscape
+            if(Keyboard.isKeyDown(Keyboard.KEY_APOSTROPHE))
+            {
+                chunks = new Chunks(0, 0, 0);
+                camera = new FPCameraController(-26f, -70f, -27f);
+            }
+            //new spawn location
+            if(Keyboard.isKeyDown(Keyboard.KEY_DELETE))
+            {
+                Random r = new Random();
+                int num = r.nextInt(60);
+                int num2 = r.nextInt(60);
+                camera = new FPCameraController(-(float)num, -70f, -(float)num2);
+            }
+            
+            
+
+                    
             glLoadIdentity();
             camera.lookThrough();
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
