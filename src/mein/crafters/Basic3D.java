@@ -78,6 +78,7 @@ class Basic3D {
         glMatrixMode(GL_PROJECTION);
         glEnable(GL_TEXTURE_2D);
         glEnable(GL_CULL_FACE);
+        //Culling to render only important surfaces
         glCullFace(GL_FRONT);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glLoadIdentity();
