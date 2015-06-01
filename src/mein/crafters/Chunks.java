@@ -28,6 +28,7 @@ public class Chunks {
 
     static final int CHUNK_SIZE = 30;
     static final int CUBE_LENGTH = 2;
+    private int maxHeight = 0;
 
     private Block[][][] Blocks;
     private int VBOVertexHandle;
@@ -77,9 +78,10 @@ public class Chunks {
                 for (int y = 0; y < CHUNK_SIZE; y++) {
                     //A special, magical height for...stuff
                     int specialHeight = y * CUBE_LENGTH + (int) height;
+                    maxHeight = (specialHeight > maxHeight) ? specialHeight : maxHeight;
                     if (specialHeight > 20) {
                         VertexPositionData.put(createCube((float) (startX + x * CUBE_LENGTH), (float) specialHeight, (float) (startZ + z * CUBE_LENGTH)));
-                        System.out.println("\nCube: " + (startX + x * CUBE_LENGTH) + " Y: " + specialHeight + " Z: " + (startZ + z * CUBE_LENGTH));
+                        System.out.println("\nCube: " +x+","+y+","+z+" at: " + (startX + x * CUBE_LENGTH) + " Y: " + specialHeight + " Z: " + (startZ + z * CUBE_LENGTH));
                         Blocks[(int)x][(int)y][(int)z].setCoords((startX + x * CUBE_LENGTH), specialHeight, (startZ + z * CUBE_LENGTH));
                         VertexColorData.put(createCubeVertexCol(getCubeColor(Blocks[(int) x][(int) y][(int) z])));
                         VertexTextureData.put(createTexCube((float) 0, (float) 0, Blocks[(int) (x)][(int) (y)][(int) (z)]));
@@ -211,7 +213,8 @@ public class Chunks {
     //To create cube with texture
     public static float[] createTexCube(float x, float y, Block block) {
         float offset = (1024f / 16) / 1024f;
-//        System.out.println("The block id is: " + block.GetID());
+        //if it's being set up for a texture it's most likely active lol
+        block.SetActive(true);
         switch (block.GetID()) {
             //Grass
             case 0:
@@ -490,13 +493,21 @@ public class Chunks {
     }
     
 
+    
+    /**
+     * It used an <u>axis aligned bounding box</u> around the chunk to detect if there was any 
+     * collision with the chunk and the camera
+     * @param camera -the camera position vector to compare to the chunk
+     * @return boolean value if the camera collided with the chunk
+     */
     boolean collision(Vector3f camera) {
         //some manipulation of this will get me in the right coordinate cube
         int x = (int) (-1 * camera.x);
         int y = (int) (-1 * camera.y);
         int z = (int) (-1 * camera.z);
-        if((x >= 0 && x < CHUNK_SIZE * 2) && (y >= 0 && y < CHUNK_SIZE * 2) && (z >= 0 && z < CHUNK_SIZE * 2)){
+        if((x >= 0 && x < CHUNK_SIZE * 2) && (y >= 20 && y <= maxHeight) && (z >= 0 && z < CHUNK_SIZE * 2)){
             System.out.println("The collision happened at- X: " + x + " Y: " + y + " Z: " + z );
+            //return Blocks[x/2][y/2][z/2].checkCollision(camera);
             return true;
         } else {
             return false;

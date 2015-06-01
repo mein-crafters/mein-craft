@@ -61,7 +61,7 @@ public class Block {
     }
     
     public boolean checkCollision(Vector3f camera){
-        if(camera.x < this.x && camera.y < this.y && camera.z < this.z){
+        if((camera.x < this.x && camera.y < this.y && camera.z < this.z) && IsActive){
             System.out.println("Collision at block position X: " + this.x + " Y: " + this.y + " Z: " + this.z);
             return true;
         } else {

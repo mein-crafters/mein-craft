@@ -44,9 +44,13 @@ import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.input.Mouse;
 import org.lwjgl.Sys;
+import static org.lwjgl.opengl.GL11.GL_BACK;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_CULL_FACE;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+import static org.lwjgl.opengl.GL11.GL_FRONT;
 import static org.lwjgl.opengl.GL11.glClear;
+import static org.lwjgl.opengl.GL11.glCullFace;
 
 /**
  *
@@ -73,6 +77,8 @@ class Basic3D {
         glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
         glMatrixMode(GL_PROJECTION);
         glEnable(GL_TEXTURE_2D);
+        glEnable(GL_CULL_FACE);
+        glCullFace(GL_FRONT);
         glEnableClientState(GL_TEXTURE_COORD_ARRAY);
         glLoadIdentity();
         GLU.gluPerspective(100.0f, (float) displayMode.getWidth() / (float) displayMode.getHeight(), 0.1f, 300.0f);
@@ -149,13 +155,24 @@ class Basic3D {
                 }
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_A) || Keyboard.isKeyDown(Keyboard.KEY_LEFT)) {
-                camera.strafeLeft(movementSpeed);
+                if(!chunks.collision(camera.getPosition())){
+                    camera.strafeLeft(movementSpeed);
+                } else {
+                    
+                }
+                
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_S) || Keyboard.isKeyDown(Keyboard.KEY_DOWN)) {
+                if(!chunks.collision(camera.getPosition())){
                 camera.walkBackwards(movementSpeed);
+                } else {
+                    
+                }
             }
             if (Keyboard.isKeyDown(Keyboard.KEY_D) || Keyboard.isKeyDown(Keyboard.KEY_RIGHT)) {
+                if(!chunks.collision(camera.getPosition())){
                 camera.strafeRight(movementSpeed);
+                } else {}
             }
 
             if (Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
